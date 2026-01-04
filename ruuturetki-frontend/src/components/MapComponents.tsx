@@ -20,37 +20,59 @@ function Timer({
   setTimer: Function,
   handleEndRound: Function
 }) {
+  console.log('Timer component run. Timer:', timer)
   // Render timer component only if timed mode is selected.
-  if (!timer) { return null }
-  // Timer is in seconds but delay is in ms => * 100
-  const [delay, setDelay] = useState<number | null>(timer * 100)
+  if (timer === false) { return null }
 
-  // Custom hook
-  useInterval(() => {
-    setTimer((t: number) => {
-      if (t <= 1) {
-        console.log('Countdown finished.')
-        // Set interval delay to null to stop the timer countdown
-        setDelay(null)
-        // In timed mode select button is disabled. Timer running to 0 is the only way to end a round.
-        handleEndRound()
-        // Reset the timer for the next round
-        setTimer(timer)
-      }
-      return t - 1
-    })
-  }, delay)
+  // End round if timer reaches 0
+  if (timer === 0) {
+    return (
+      <Button
+        variant="dark"
+        id="timer-indicator"
+        disabled
+      >
+        0
+      </Button>
+    )
+  } else {
+    // Else minus -1 from the timer every second
+    const handleTimerClick = () => {
+      setTimer(timer - 1)
+    }
 
-  return (
-    <Button
-      variant="dark"
-      id="timer-indicator"
-      disabled
-    >
-      {timer.toString()}
-    </Button>
-  )
+    return (
+      <Button
+        variant="dark"
+        id="timer-indicator"
+        // disabled
+        onClick={handleTimerClick}
+      >
+        {timer.toString()}
+      </Button>
+    )
+  }
 }
+// // Timer is in seconds but delay is in ms => * 100
+// const [delay, setDelay] = useState<number | null>(timer * 100)
+
+// // Custom hook
+// useInterval(() => {
+//   setTimer((t: number) => {
+//     if (t <= 1) {
+//       console.log('Countdown finished.')
+//       // Set interval delay to null to stop the timer countdown
+//       setDelay(null)
+//       // In timed mode select button is disabled. Timer running to 0 is the only way to end a round.
+//       handleEndRound()
+//       // Reset the timer for the next round
+//       setTimer(timer)
+//     }
+//     return t - 1
+//   })
+// }, delay)
+
+
 
 function SelectButton({
   handleEndRound,
@@ -159,6 +181,7 @@ function MapComponents({
 
   const handleEndRound = () => {
     console.log('handleEndRound() called. GameState:', gameState)
+    if (gameState.rounds > 5) { return null }
 
     let score = 0
     if (gameState.picked === false) {
@@ -247,6 +270,10 @@ function MapComponents({
     map.setView(newStartPosition)
   }
 
+  if (timer === 0) {
+    console.log('timer 0')
+    handleEndRound()
+  }
   return (
     <>
       <Button
