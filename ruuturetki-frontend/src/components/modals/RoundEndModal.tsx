@@ -1,8 +1,8 @@
 import { Modal } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
-import type { GameState } from '../Game'
 import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet'
 import markerIcon from '../MarkerIcon.tsx'
+import { GameState } from '../../types.ts'
 
 function ModalButton({
   round,
@@ -31,7 +31,7 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
     zoom: 12,
     scrollWheelZoom: true,
   }
-  console.log('REM gameState:', gameState)
+  // console.log('REM gameState:', gameState)
   if (!gameState.picked) {
     return (
       <MapContainer id="results-map" {...resultMapOptions}>

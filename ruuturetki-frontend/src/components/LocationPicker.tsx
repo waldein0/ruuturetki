@@ -6,15 +6,11 @@ import markerIcon from './MarkerIcon.tsx'
 import { GameState } from '../types.ts'
 
 function LocationPicker({
-  // pickerPosition,
-  // setPickerPosition,
   startPosition,
   setPickScore,
   gameState,
   setGameState
 }: {
-  // pickerPosition: L.LatLng | null,
-  // setPickerPosition: Function,
   startPosition: L.LatLng
   setPickScore: Function,
   gameState: GameState,

@@ -8,13 +8,12 @@ function PlayModal({
   handleClosePlay,
   setGameSettings,
   gameSettings
-}:
-  {
-    show: boolean,
-    handleClosePlay: () => void,
-    setGameSettings: Function,
-    gameSettings: GameSettings
-  }) {
+}: {
+  show: boolean,
+  handleClosePlay: () => void,
+  setGameSettings: Function,
+  gameSettings: GameSettings
+}) {
   const navigate = useNavigate()
 
   return (
@@ -52,7 +51,7 @@ function PlayModal({
                   console.log('Timed mode?', !gameSettings.timed)
                   setGameSettings({
                     ...gameSettings,
-                    timed: gameSettings.timed ? false : 10 // Switch between options false and 10
+                    timed: gameSettings.timed ? false : 15 // Switch between options false and 10
                   })
                 }}
               />

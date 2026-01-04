@@ -1,9 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import L from 'leaflet'
 import SelectionMap from './SelectionMap.tsx'
 import ViewMap from './ViewMap.tsx'
-import { getDistance } from 'geolib'
-import gameService from '../services/games'
 import { GameState, GameSettings } from '../types'
 
 export function getRandomLatLng() {
@@ -28,44 +26,13 @@ const startState: GameState = {
 
 function Game({ gameSettings }: { gameSettings: GameSettings }) {
   const [startPosition, setStartPosition] = useState<L.LatLng>(() => getRandomLatLng())
-  // const [pickerPosition, setPickerPosition] = useState<L.LatLng | null>(null)
   const [pickScore, setPickScore] = useState(0)
   const [gameState, setGameState] = useState(startState)
   const [distance, setDistance] = useState(0)
-  // console.log('game run')
-
-  // // Calculate score for a guess and update game state 
-  // useEffect(() => {
-  //   if (pickerPosition) {
-  //     const score = getDistance(
-  //       { latitude: startPosition.lat, longitude: startPosition.lng },
-  //       { latitude: pickerPosition.lat, longitude: pickerPosition.lng },
-  //     )
-  //     setPickScore(score)
-  //   }
-  //   // Update picked state 
-  //   if (pickerPosition && gameState.picked === false) {
-  //     setGameState({ ...gameState, picked: true })
-  //   }
-  // }, [pickerPosition])
-
-  // useEffect(() => {
-  //   const gameUserJSON = window.localStorage.getItem('gameUser')
-  //   if (gameUserJSON) {
-  //     const user = JSON.parse(gameUserJSON)
-  //     setGameState({ ...gameState, user: user })
-  //     gameService.setToken(user.token)
-  //   } else {
-  //     gameService.setToken('')
-  //     setGameState({ ...gameState, user: null })
-  //   }
-  // }, [])
 
   return (
     <>
       <SelectionMap
-        // pickerPosition={pickerPosition}
-        // setPickerPosition={// setPickerPosition}
         startPosition={startPosition}
         setPickScore={setPickScore}
         gameState={gameState}
@@ -80,7 +47,6 @@ function Game({ gameSettings }: { gameSettings: GameSettings }) {
         setDistance={setDistance}
         gameState={gameState}
         setGameState={setGameState}
-        // pickerPosition={pickerPosition}
         getRandomLatLng={getRandomLatLng}
         gameSettings={gameSettings}
       />
@@ -89,4 +55,3 @@ function Game({ gameSettings }: { gameSettings: GameSettings }) {
 }
 
 export default Game
-export type { GameState }

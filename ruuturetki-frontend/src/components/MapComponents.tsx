@@ -5,71 +5,32 @@ import { useMap } from 'react-leaflet'
 import { useEffect, useState } from 'react'
 import DevStats from './DevStats.tsx'
 import RoundEndModal from './modals/RoundEndModal.tsx'
-import type { GameState } from './Game.tsx'
 import { useNavigate } from 'react-router-dom'
 import gameService from '../services/games'
-import { GameSettings } from '../types.tsx'
-import useInterval from './useInterval.tsx'
+import { GameSettings, GameState } from '../types.tsx'
 
 function Timer({
   timer,
-  setTimer,
-  handleEndRound
+  setTimer
 }: {
   timer: false | number,
-  setTimer: Function,
-  handleEndRound: Function
+  setTimer: Function
 }) {
-  // console.log('Timer component run. Timer:', timer)
   // Render timer component only if timed mode is selected.
   if (timer === false) { return null }
-
-  // End round if timer reaches 0
-  if (timer === 0) {
-    return (
-      <Button
-        variant="dark"
-        id="timer-indicator"
-        disabled
-      >
-        0
-      </Button>
-    )
-  } else {
-    // Else minus -1 from the timer every second
-    setTimeout(() => { setTimer(timer - 1) }, 1000)
-
-    return (
-      <Button
-        variant="dark"
-        id="timer-indicator"
-        disabled
-      >
-        {timer.toString()}
-      </Button>
-    )
-  }
+  // Minus 1 from the timer every 1000 ms
+  if (timer !== 0) { setTimeout(() => { setTimer(timer - 1) }, 1000) }
+  // Return timer indicator
+  return (
+    <Button
+      variant="dark"
+      id="timer-indicator"
+      disabled
+    >
+      {timer.toString()}
+    </Button>
+  )
 }
-// // Timer is in seconds but delay is in ms => * 100
-// const [delay, setDelay] = useState<number | null>(timer * 100)
-
-// // Custom hook
-// useInterval(() => {
-//   setTimer((t: number) => {
-//     if (t <= 1) {
-//       console.log('Countdown finished.')
-//       // Set interval delay to null to stop the timer countdown
-//       setDelay(null)
-//       // In timed mode select button is disabled. Timer running to 0 is the only way to end a round.
-//       handleEndRound()
-//       // Reset the timer for the next round
-//       setTimer(timer)
-//     }
-//     return t - 1
-//   })
-// }, delay)
-
-
 
 function SelectButton({
   handleEndRound,
@@ -130,7 +91,6 @@ function MapComponents({
   setDistance,
   gameState,
   setGameState,
-  // pickerPosition,
   getRandomLatLng,
   gameSettings
 }: {
@@ -142,7 +102,6 @@ function MapComponents({
   setDistance: Function,
   gameState: GameState,
   setGameState: Function,
-  // pickerPosition: L.LatLng | null,
   getRandomLatLng: Function,
   gameSettings: GameSettings
 }) {
@@ -176,8 +135,8 @@ function MapComponents({
 
   const handleShowREM = () => setShowREM(true)
 
-  const handleEndRound = async () => {
-    console.log('handleEndRound() called. GameState:', gameState)
+  const handleEndRound = () => {
+    // console.log('handleEndRound() called. GameState:', gameState)
     if (gameState.rounds > 5) { return null }
 
     let score = 0
@@ -235,13 +194,12 @@ function MapComponents({
   const handleSkipMap = async () => {
     // Different handling if it is the last round
     const newState = {
+      ...gameState,
       rounds: gameState.rounds + 1,
       locations: gameState.locations.concat(startPosition),
       guesses: gameState.guesses.concat(L.latLng(0, 0)),
-      score: gameState.score,
       picked: false,
       skipped: gameState.skipped + 1,
-      user: gameState.user,
     }
 
     if (gameState.rounds === 4) {
@@ -269,7 +227,6 @@ function MapComponents({
   // Monitor timer and handle timer reaches 0
   useEffect(() => {
     if (timer === 0) {
-      console.log('timer 0')
       handleEndRound()
     }
   }, [timer])
@@ -286,7 +243,6 @@ function MapComponents({
       <Timer
         timer={timer}
         setTimer={setTimer}
-        handleEndRound={handleEndRound}
       />
       <RoundEndModal
         gameState={gameState}

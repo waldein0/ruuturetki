@@ -12,7 +12,6 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import Game from './components/Game'
 import { GameSettings } from './types'
-
 import PlayModal from './components/modals/PlayModal'
 import Practice from './components/Practice'
 import L from 'leaflet'
@@ -42,7 +41,6 @@ function StartMenu({
         timed: false
       })
     }
-
   }, [showPlayModal])
 
   const wmsOptions: L.WMSOptions = {

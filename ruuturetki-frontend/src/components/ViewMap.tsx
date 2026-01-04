@@ -1,8 +1,7 @@
 import { MapContainer, WMSTileLayer, Marker, Popup } from 'react-leaflet'
 import MapComponents from './MapComponents.tsx'
 import { useState, useEffect } from 'react'
-import type { GameState } from './Game.tsx'
-import { GameSettings } from '../types.ts'
+import { GameSettings, GameState } from '../types.ts'
 import markerIcon from './MarkerIcon.tsx'
 
 function OrtoLayer({
@@ -43,7 +42,6 @@ function ViewMap(
     setDistance,
     gameState,
     setGameState,
-    // pickerPosition,
     getRandomLatLng,
     gameSettings
   }:
@@ -56,7 +54,6 @@ function ViewMap(
       setDistance: Function,
       gameState: GameState,
       setGameState: Function,
-      // pickerPosition: L.LatLng | null,
       getRandomLatLng: Function,
       gameSettings: GameSettings
     }) {
@@ -99,7 +96,6 @@ function ViewMap(
           setDistance={setDistance}
           gameState={gameState}
           setGameState={setGameState}
-          // pickerPosition={pickerPosition}
           getRandomLatLng={getRandomLatLng}
           gameSettings={gameSettings}
         />

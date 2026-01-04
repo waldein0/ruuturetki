@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getDistance } from 'geolib'
 import { useMap } from 'react-leaflet'
-import type { GameState } from './Game.tsx'
+import { GameState } from '../types'
 
 function DevStats({
   startPosition,
@@ -45,9 +45,9 @@ function DevStats({
     }
   }, [map, onMove])
 
-  // if (!gameState.user || (gameState.user && !gameState.user.admin)) {
-  //   return null
-  // }
+  if (!gameState.user || (gameState.user && !gameState.user.admin)) {
+    return null
+  }
 
   return (
     <div id="dev-stat">
