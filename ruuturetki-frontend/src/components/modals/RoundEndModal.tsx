@@ -31,6 +31,7 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
     zoom: 12,
     scrollWheelZoom: true,
   }
+  console.log('REM gameState:', gameState)
   if (!gameState.picked) {
     return (
       <MapContainer id="results-map" {...resultMapOptions}>
@@ -38,7 +39,11 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
           attribution={'&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
           url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
         />
-        <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon} />
+        <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon} >
+          <Tooltip permanent>
+            The correct answer (you didn't guess in time)
+          </Tooltip>
+        </Marker>
       </MapContainer>
     )
   }
@@ -48,7 +53,11 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
         attribution={'&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
         url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
       />
-      <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon} />
+      <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon}>
+        <Tooltip permanent>
+          The correct answer
+        </Tooltip>
+      </Marker>
       <Marker position={gameState.guesses[gameState.rounds - 1]} icon={markerIcon}>
         <Tooltip permanent>
           Your guess

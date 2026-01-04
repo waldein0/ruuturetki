@@ -28,45 +28,48 @@ const startState: GameState = {
 
 function Game({ gameSettings }: { gameSettings: GameSettings }) {
   const [startPosition, setStartPosition] = useState<L.LatLng>(() => getRandomLatLng())
-  const [pickerPosition, setPickerPosition] = useState<L.LatLng | null>(null)
+  // const [pickerPosition, setPickerPosition] = useState<L.LatLng | null>(null)
   const [pickScore, setPickScore] = useState(0)
-  const [gameState, setGameState] = useState<GameState>(startState)
+  const [gameState, setGameState] = useState(startState)
   const [distance, setDistance] = useState(0)
+  // console.log('game run')
 
-  // Calculate score for a guess and update game state 
-  useEffect(() => {
-    if (pickerPosition) {
-      const score = getDistance(
-        { latitude: startPosition.lat, longitude: startPosition.lng },
-        { latitude: pickerPosition.lat, longitude: pickerPosition.lng },
-      )
-      setPickScore(score)
-    }
-    // Update picked state 
-    if (pickerPosition && gameState.picked === false) {
-      setGameState({ ...gameState, picked: true })
-    }
-  }, [pickerPosition])
+  // // Calculate score for a guess and update game state 
+  // useEffect(() => {
+  //   if (pickerPosition) {
+  //     const score = getDistance(
+  //       { latitude: startPosition.lat, longitude: startPosition.lng },
+  //       { latitude: pickerPosition.lat, longitude: pickerPosition.lng },
+  //     )
+  //     setPickScore(score)
+  //   }
+  //   // Update picked state 
+  //   if (pickerPosition && gameState.picked === false) {
+  //     setGameState({ ...gameState, picked: true })
+  //   }
+  // }, [pickerPosition])
 
-  useEffect(() => {
-    const gameUserJSON = window.localStorage.getItem('gameUser')
-    if (gameUserJSON) {
-      const user = JSON.parse(gameUserJSON)
-      setGameState({ ...gameState, user: user })
-      gameService.setToken(user.token)
-    } else {
-      gameService.setToken('')
-      setGameState({ ...gameState, user: null })
-    }
-  }, [])
+  // useEffect(() => {
+  //   const gameUserJSON = window.localStorage.getItem('gameUser')
+  //   if (gameUserJSON) {
+  //     const user = JSON.parse(gameUserJSON)
+  //     setGameState({ ...gameState, user: user })
+  //     gameService.setToken(user.token)
+  //   } else {
+  //     gameService.setToken('')
+  //     setGameState({ ...gameState, user: null })
+  //   }
+  // }, [])
 
   return (
     <>
       <SelectionMap
-        pickerPosition={pickerPosition}
-        setPickerPosition={setPickerPosition}
+        // pickerPosition={pickerPosition}
+        // setPickerPosition={// setPickerPosition}
         startPosition={startPosition}
         setPickScore={setPickScore}
+        gameState={gameState}
+        setGameState={setGameState}
       />
       <ViewMap
         startPosition={startPosition}
@@ -76,8 +79,8 @@ function Game({ gameSettings }: { gameSettings: GameSettings }) {
         distance={distance}
         setDistance={setDistance}
         gameState={gameState}
-        setGameState={setGameState}        
-        pickerPosition={pickerPosition}
+        setGameState={setGameState}
+        // pickerPosition={pickerPosition}
         getRandomLatLng={getRandomLatLng}
         gameSettings={gameSettings}
       />

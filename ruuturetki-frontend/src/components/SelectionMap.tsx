@@ -1,17 +1,22 @@
 import L from 'leaflet'
 import { MapContainer, TileLayer, } from 'react-leaflet'
 import LocationPicker from './LocationPicker.tsx'
+import { GameState } from '../types.ts'
 
 function SelectionMap({
-  pickerPosition,
-  setPickerPosition,
+  // pickerPosition,
+  // setPickerPosition,
   startPosition,
-  setPickScore
+  setPickScore,
+  gameState,
+  setGameState
 }: {
-  pickerPosition: L.LatLng | null,
-  setPickerPosition: Function,
+  // pickerPosition: L.LatLng | null,
+  // setPickerPosition: Function,
   startPosition: L.LatLng
-  setPickScore: Function
+  setPickScore: Function,
+  gameState: GameState,
+  setGameState: Function
 }) {
 
   const zone_bounds: L.LatLngBounds = L.latLngBounds(L.latLng(60.13, 24.82), L.latLng(60.295, 25.20))
@@ -31,10 +36,12 @@ function SelectionMap({
         url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
       />
       <LocationPicker
-        pickerPosition={pickerPosition}
-        setPickerPosition={setPickerPosition}
+        // pickerPosition={pickerPosition}
+        // setPickerPosition={setPickerPosition}
         startPosition={startPosition}
         setPickScore={setPickScore}
+        gameState={gameState}
+        setGameState={setGameState}
       />
     </MapContainer>
   )

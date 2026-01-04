@@ -2,7 +2,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Button } from 'react-bootstrap'
 import { useMap } from 'react-leaflet'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import DevStats from './DevStats.tsx'
 import RoundEndModal from './modals/RoundEndModal.tsx'
 import type { GameState } from './Game.tsx'
@@ -20,7 +20,7 @@ function Timer({
   setTimer: Function,
   handleEndRound: Function
 }) {
-  console.log('Timer component run. Timer:', timer)
+  // console.log('Timer component run. Timer:', timer)
   // Render timer component only if timed mode is selected.
   if (timer === false) { return null }
 
@@ -37,16 +37,13 @@ function Timer({
     )
   } else {
     // Else minus -1 from the timer every second
-    const handleTimerClick = () => {
-      setTimer(timer - 1)
-    }
+    setTimeout(() => { setTimer(timer - 1) }, 1000)
 
     return (
       <Button
         variant="dark"
         id="timer-indicator"
-        // disabled
-        onClick={handleTimerClick}
+        disabled
       >
         {timer.toString()}
       </Button>
@@ -133,7 +130,7 @@ function MapComponents({
   setDistance,
   gameState,
   setGameState,
-  pickerPosition,
+  // pickerPosition,
   getRandomLatLng,
   gameSettings
 }: {
@@ -145,7 +142,7 @@ function MapComponents({
   setDistance: Function,
   gameState: GameState,
   setGameState: Function,
-  pickerPosition: L.LatLng | null,
+  // pickerPosition: L.LatLng | null,
   getRandomLatLng: Function,
   gameSettings: GameSettings
 }) {
@@ -179,7 +176,7 @@ function MapComponents({
 
   const handleShowREM = () => setShowREM(true)
 
-  const handleEndRound = () => {
+  const handleEndRound = async () => {
     console.log('handleEndRound() called. GameState:', gameState)
     if (gameState.rounds > 5) { return null }
 
@@ -206,54 +203,53 @@ function MapComponents({
         )
         // Score is set to 0 in the timed mode
         score = 0
+        setRoundScore(score)
+        const newState = {
+          ...gameState,
+          rounds: gameState.rounds + 1,
+          locations: gameState.locations.concat(startPosition),
+          guesses: gameState.guesses.concat(L.latLng(0, 0)),
+          score: gameState.score + score,
+        }
+        setGameState(newState)
+        handleShowREM()
       }
     } else {
-      /* Both modes and a location succesfully guessed*/
+      /* Both modes and a location guessed*/
 
       // Calculate the score of the guess
       score = Math.max((10000 - pickScore * 2 - distance * 2.5), 0)
+
+      setRoundScore(score)
+      const newState = {
+        ...gameState,
+        rounds: gameState.rounds + 1,
+        locations: gameState.locations.concat(startPosition),
+        score: gameState.score + score,
+      }
+      setGameState(newState)
+      handleShowREM()
     }
-    console.log('setRoundScore:', score)
-    setRoundScore(score)
-    const newState = {
-      rounds: gameState.rounds + 1,
-      locations: gameState.locations.concat(startPosition),
-      guesses: gameState.guesses.concat((pickerPosition) ? pickerPosition : L.latLng(0, 0)),
-      score: gameState.score + score,
-      picked: true,
-      skipped: gameState.skipped,
-      user: gameState.user
-    }
-    setGameState(newState)
-    handleShowREM()
   }
 
   const handleSkipMap = async () => {
     // Different handling if it is the last round
+    const newState = {
+      rounds: gameState.rounds + 1,
+      locations: gameState.locations.concat(startPosition),
+      guesses: gameState.guesses.concat(L.latLng(0, 0)),
+      score: gameState.score,
+      picked: false,
+      skipped: gameState.skipped + 1,
+      user: gameState.user,
+    }
+
     if (gameState.rounds === 4) {
-      const new_state = {
-        rounds: gameState.rounds + 1,
-        locations: gameState.locations.concat(startPosition),
-        guesses: gameState.guesses.concat(L.latLng(0, 0)),
-        score: gameState.score,
-        picked: false,
-        skipped: gameState.skipped + 1,
-        user: gameState.user,
-      }
-      await setGameState(new_state)
+      await setGameState(newState)
       setShowREM(true)
     } else {
       // Other than the last round
-      const new_state = {
-        rounds: gameState.rounds + 1,
-        locations: gameState.locations.concat(startPosition),
-        guesses: gameState.guesses.concat(L.latLng(0, 0)),
-        score: gameState.score,
-        picked: false,
-        skipped: gameState.skipped + 1,
-        user: gameState.user,
-      }
-      setGameState(new_state)
+      setGameState(newState)
       refreshMap()
     }
   }
@@ -270,10 +266,14 @@ function MapComponents({
     map.setView(newStartPosition)
   }
 
-  if (timer === 0) {
-    console.log('timer 0')
-    handleEndRound()
-  }
+  // Monitor timer and handle timer reaches 0
+  useEffect(() => {
+    if (timer === 0) {
+      console.log('timer 0')
+      handleEndRound()
+    }
+  }, [timer])
+
   return (
     <>
       <Button

@@ -43,7 +43,7 @@ function ViewMap(
     setDistance,
     gameState,
     setGameState,
-    pickerPosition,
+    // pickerPosition,
     getRandomLatLng,
     gameSettings
   }:
@@ -56,7 +56,7 @@ function ViewMap(
       setDistance: Function,
       gameState: GameState,
       setGameState: Function,
-      pickerPosition: L.LatLng | null,
+      // pickerPosition: L.LatLng | null,
       getRandomLatLng: Function,
       gameSettings: GameSettings
     }) {
@@ -99,7 +99,7 @@ function ViewMap(
           setDistance={setDistance}
           gameState={gameState}
           setGameState={setGameState}
-          pickerPosition={pickerPosition}
+          // pickerPosition={pickerPosition}
           getRandomLatLng={getRandomLatLng}
           gameSettings={gameSettings}
         />

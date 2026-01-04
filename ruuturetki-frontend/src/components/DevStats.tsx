@@ -24,12 +24,12 @@ function DevStats({
   }, [startPosition])
 
   function distUpdate(newStartPosition: L.LatLng) {
-    const distance = getDistance(
+    const maxDistance = getDistance(
       { latitude: startPosition.lat, longitude: startPosition.lng },
       { latitude: devPosition.lat, longitude: devPosition.lng },
     )
-    if (distance > distance) {
-      setDistance(distance)
+    if (maxDistance > distance) {
+      setDistance(maxDistance)
     }
     setDevPosition(newStartPosition)
   }
@@ -45,16 +45,16 @@ function DevStats({
     }
   }, [map, onMove])
 
-  if (!gameState.user || (gameState.user && !gameState.user.admin)) {
-    return null
-  }
+  // if (!gameState.user || (gameState.user && !gameState.user.admin)) {
+  //   return null
+  // }
 
   return (
     <div id="dev-stat">
       <h2 >
         latitude: {devPosition.lat.toFixed(4)}, longitude: {devPosition.lng.toFixed(4)}{'  '}
         maximum distance: {distance}{'  '}
-        picker score: {pickScore}{'  '}
+        pick score: {pickScore}{'  '}
       </h2>
       <h1>
         round: {gameState.rounds + 1}{'  '}
