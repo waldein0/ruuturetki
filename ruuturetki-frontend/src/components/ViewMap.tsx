@@ -32,37 +32,25 @@ function OrtoLayer({
   )
 }
 
-function ViewMap(
-  {
-    startPosition,
-    setStartPosition,
-    pickScore,
-    setPickScore,
-    distance,
-    setDistance,
-    gameState,
-    setGameState,
-    getRandomLatLng,
-    gameSettings
-  }:
-    {
-      startPosition: L.LatLng,
-      setStartPosition: Function,
-      pickScore: number,
-      setPickScore: Function,
-      distance: number,
-      setDistance: Function,
-      gameState: GameState,
-      setGameState: Function,
-      getRandomLatLng: Function,
-      gameSettings: GameSettings
-    }) {
-  const move_bounds: L.LatLngBounds = startPosition.toBounds(3800)
+function ViewMap({
+  gameState,
+  setGameState,
+  gameSettings
+}: {
+  gameState: GameState,
+  setGameState: Function,
+  gameSettings: GameSettings
+}) {
+  // Get the starting position of each round from gameState
+  const startPosition = gameState.locations[gameState.roundId]
+
+  // Set view map options
+  const maxBounds: L.LatLngBounds = startPosition.toBounds(3800)
   const mapOptions: L.MapOptions = {
     center: startPosition,
     zoom: 17,
     scrollWheelZoom: false,
-    maxBounds: move_bounds,
+    maxBounds: maxBounds,
     maxBoundsViscosity: 0.9,
     zoomControl: false,
     boxZoom: false,
@@ -70,9 +58,8 @@ function ViewMap(
     dragging: gameSettings.dragging
   }
 
-  const [renderKey, setKey] = useState(1)
-
   //key trick for forcing rerender on the WMS layer
+  const [renderKey, setKey] = useState(1)
   useEffect(() => {
     setKey(prevKey => prevKey + 1)
   }, [startPosition])
@@ -88,15 +75,8 @@ function ViewMap(
         </Marker>
 
         <MapComponents
-          startPosition={startPosition}
-          setStartPosition={setStartPosition}
-          pickScore={pickScore}
-          setPickScore={setPickScore}
-          distance={distance}
-          setDistance={setDistance}
           gameState={gameState}
           setGameState={setGameState}
-          getRandomLatLng={getRandomLatLng}
           gameSettings={gameSettings}
         />
       </MapContainer>

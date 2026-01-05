@@ -4,13 +4,9 @@ import LocationPicker from './LocationPicker.tsx'
 import { GameState } from '../types.ts'
 
 function SelectionMap({
-  startPosition,
-  setPickScore,
   gameState,
   setGameState
 }: {
-  startPosition: L.LatLng
-  setPickScore: Function,
   gameState: GameState,
   setGameState: Function
 }) {
@@ -32,8 +28,6 @@ function SelectionMap({
         url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
       />
       <LocationPicker
-        startPosition={startPosition}
-        setPickScore={setPickScore}
         gameState={gameState}
         setGameState={setGameState}
       />

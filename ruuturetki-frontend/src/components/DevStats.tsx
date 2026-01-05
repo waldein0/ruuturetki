@@ -1,64 +1,34 @@
-import { useState, useEffect } from 'react'
 import { getDistance } from 'geolib'
-import { useMap } from 'react-leaflet'
 import { GameState } from '../types'
 
-function DevStats({
-  startPosition,
-  pickScore,
-  distance,
-  setDistance,
-  gameState,
-}: {
-  startPosition: L.LatLng,
-  pickScore: number,
-  distance: number,
-  setDistance: Function,
-  gameState: GameState,
-}) {
-  const [devPosition, setDevPosition] = useState(startPosition)
-  const map = useMap()
-  useEffect(() => {
-    setDevPosition(startPosition)
-    setDistance(0)
-  }, [startPosition])
-
-  function distUpdate(newStartPosition: L.LatLng) {
-    const maxDistance = getDistance(
-      { latitude: startPosition.lat, longitude: startPosition.lng },
-      { latitude: devPosition.lat, longitude: devPosition.lng },
-    )
-    if (maxDistance > distance) {
-      setDistance(maxDistance)
-    }
-    setDevPosition(newStartPosition)
-  }
-
-  const onMove = () => {
-    distUpdate(map.getCenter())
-  }
-
-  useEffect(() => {
-    map.on('move', onMove)
-    return () => {
-      map.off('move', onMove)
-    }
-  }, [map, onMove])
-
+function DevStats({ gameState }: { gameState: GameState }) {
   if (!gameState.user || (gameState.user && !gameState.user.admin)) {
     return null
   }
+  // Get the state of the game
+  const startPosition = gameState.locations[gameState.roundId]
+  const distanceMoved = gameState.distanceMoved
+  let pickScore = 0
+  try {
+    pickScore = getDistance({
+      latitude: gameState.locations[gameState.roundId].lat,
+      longitude: gameState.locations[gameState.roundId].lng
+    }, {
+      latitude: gameState.guesses[gameState.roundId].lat,
+      longitude: gameState.guesses[gameState.roundId].lng
+    })
+  } catch (error) { /* Location not yet guessed, do nothing */ }
 
   return (
     <div id="dev-stat">
       <h2 >
-        latitude: {devPosition.lat.toFixed(4)}, longitude: {devPosition.lng.toFixed(4)}{'  '}
-        maximum distance: {distance}{'  '}
+        latitude: {startPosition.lat.toFixed(4)}, longitude: {startPosition.lng.toFixed(4)}{'  '}
+        maximum distance: {distanceMoved}{'  '}
         pick score: {pickScore}{'  '}
       </h2>
       <h1>
-        round: {gameState.rounds + 1}{'  '}
-        score: {gameState.score}{'  '}
+        round: {gameState.roundId + 1}{'  '}
+        round scores: {gameState.score.reduce((a, c) => a + `[${c}],`, ``)}{'  '}
         picked(true=1): {Number(gameState.picked)}
       </h1>
     </div>

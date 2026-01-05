@@ -15,39 +15,28 @@ export function getRandomLatLng() {
 }
 
 const startState: GameState = {
-  rounds: 0,
-  locations: [],
+  roundId: 0,
+  locations: [getRandomLatLng()],
   guesses: [],
-  score: 0,
+  score: [],
+  distanceMoved: 0,
   picked: false,
   skipped: 0,
   user: null
 }
 
 function Game({ gameSettings }: { gameSettings: GameSettings }) {
-  const [startPosition, setStartPosition] = useState<L.LatLng>(() => getRandomLatLng())
-  const [pickScore, setPickScore] = useState(0)
   const [gameState, setGameState] = useState(startState)
-  const [distance, setDistance] = useState(0)
 
   return (
     <>
       <SelectionMap
-        startPosition={startPosition}
-        setPickScore={setPickScore}
         gameState={gameState}
         setGameState={setGameState}
       />
       <ViewMap
-        startPosition={startPosition}
-        setStartPosition={setStartPosition}
-        pickScore={pickScore}
-        setPickScore={setPickScore}
-        distance={distance}
-        setDistance={setDistance}
         gameState={gameState}
         setGameState={setGameState}
-        getRandomLatLng={getRandomLatLng}
         gameSettings={gameSettings}
       />
     </>

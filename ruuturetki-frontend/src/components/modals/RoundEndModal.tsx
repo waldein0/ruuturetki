@@ -11,7 +11,6 @@ function ModalButton({
   round: number,
   handleCloseREM: () => void
 }) {
-
   return (
     <>
       <Button
@@ -25,13 +24,13 @@ function ModalButton({
 }
 
 const ModalMap = ({ gameState }: { gameState: GameState }) => {
-  const resultCenter: L.LatLng = gameState.locations[gameState.rounds - 1]
+  const resultCenter: L.LatLng = gameState.locations[gameState.roundId]
   const resultMapOptions: L.MapOptions = {
     center: resultCenter,
     zoom: 12,
     scrollWheelZoom: true,
   }
-  // console.log('REM gameState:', gameState)
+  console.log('REM gameState:', gameState)
   if (!gameState.picked) {
     return (
       <MapContainer id="results-map" {...resultMapOptions}>
@@ -39,7 +38,7 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
           attribution={'&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
           url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
         />
-        <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon} >
+        <Marker position={gameState.locations[gameState.roundId]} icon={markerIcon} >
           <Tooltip permanent>
             The correct answer (you didn't guess in time)
           </Tooltip>
@@ -53,34 +52,38 @@ const ModalMap = ({ gameState }: { gameState: GameState }) => {
         attribution={'&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
         url={'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png'}
       />
-      <Marker position={gameState.locations[gameState.rounds - 1]} icon={markerIcon}>
+      <Marker position={gameState.locations[gameState.roundId]} icon={markerIcon}>
         <Tooltip permanent>
           The correct answer
         </Tooltip>
       </Marker>
-      <Marker position={gameState.guesses[gameState.rounds - 1]} icon={markerIcon}>
+      <Marker position={gameState.guesses[gameState.roundId]} icon={markerIcon}>
         <Tooltip permanent>
           Your guess
         </Tooltip>
       </Marker>
     </MapContainer>
   )
-
 }
-
 
 function RoundEndModal({
   gameState,
   show,
   handleCloseREM,
-  roundScore,
 }: {
   gameState: GameState,
   show: boolean,
   handleCloseREM: () => void,
-  roundScore: number
 }) {
-
+  let score = 0
+  try {
+    score = gameState.score[gameState.roundId]
+  } catch (err) {
+    /* This error happens only if the
+    last round is skipped (REM shown without 
+    calculating a score for the round).
+    In all other cases assign correct round score */
+   }
   return (
     <>
       <Modal
@@ -92,21 +95,21 @@ function RoundEndModal({
         backdrop="static"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Round {gameState.rounds}/5 score:</Modal.Title>
+          <Modal.Title>Round {gameState.roundId + 1}/5 score:</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div id="modal-content">
             <h2>
-              {roundScore} points for the round!
+              {gameState.score[gameState.roundId]} points for the round!
             </h2>
             <ModalMap gameState={gameState} />
             <h2 id="modal-score">
-              {gameState.score} / {gameState.rounds}0 000 total points
+              {gameState.score.reduce((a, c) => a + c, 0)} / {gameState.roundId + 1}0 000 total points
             </h2>
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <ModalButton round={gameState.rounds} handleCloseREM={handleCloseREM} />
+          <ModalButton round={gameState.roundId} handleCloseREM={handleCloseREM} />
         </Modal.Footer>
       </Modal>
     </>

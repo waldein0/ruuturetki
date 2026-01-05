@@ -28,10 +28,11 @@ export interface GameSettings {
 }
 
 export type GameState = {
-  rounds: number,
+  roundId: number,
   locations: L.LatLng[],
   guesses: L.LatLng[],
-  score: number,
+  score: number[],
+  distanceMoved: number,
   picked: boolean,
   skipped: number,
   user: LUser | null
