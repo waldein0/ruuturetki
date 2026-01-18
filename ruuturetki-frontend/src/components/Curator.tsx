@@ -35,7 +35,7 @@ export default function Curator({ mapLayer }: { mapLayer: string }) {
       // Alert if map is clicked after selecting 5 locations and zoom selection is not opened yet
       if (curatorLocations.length === 5 && !showZoomSelection) {
         alert(
-          "You have selected a sufficient number of locations. Click Set locations to continue to the zoom selection."
+          "You have selected a sufficient number of locations. Click Set locations to continue to the zoom selection.",
         );
       }
     },
@@ -50,7 +50,7 @@ export default function Curator({ mapLayer }: { mapLayer: string }) {
       alert(
         `Click ${
           5 - curatorLocations.length
-        } more location(s) before continuing!`
+        } more location(s) before continuing!`,
       );
       return;
     }
@@ -61,7 +61,7 @@ export default function Curator({ mapLayer }: { mapLayer: string }) {
           curatorZooms.length + 1
         }. Click ${
           curatorZooms.length === 4 ? "end" : "next"
-        } to select current zoom and continue.`
+        } to select current zoom and continue.`,
       );
       return;
     }
@@ -140,7 +140,7 @@ export default function Curator({ mapLayer }: { mapLayer: string }) {
           variant="dark"
           onClick={() => {
             return confirm(
-              "Are you sure you want to reset your curator progress?"
+              "Are you sure you want to reset your curator progress?",
             )
               ? handleReset()
               : () => {};
@@ -249,7 +249,7 @@ function CuratorEndModal({
     // This function submits the daily challenge to the daily calendar
     // and returns to the practice mode
     event.preventDefault();
-    
+
     // Submit the daily challenge to the daily calendar
     const selectedDate = event.currentTarget.date.value;
     console.log("Date selected:", selectedDate);
@@ -259,7 +259,7 @@ function CuratorEndModal({
 
     // Reset curator mode and return to the practice mode
     setShowCuratorEndModal(false);
-    handleReset()
+    handleReset();
   };
   const handleClose = () => {
     if (confirm("Return to practice map without submitting daily challenge?")) {
@@ -314,6 +314,10 @@ function CuratorSelectedLocations({
   curatorLocations: L.LatLng[];
 }) {
   const map = useMap();
+  useEffect(() => {
+    window.curatorMap = map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   setTimeout(() => {
     map.fitBounds(L.latLngBounds(curatorLocations), { padding: [50, 50] });
   }, 1500);
