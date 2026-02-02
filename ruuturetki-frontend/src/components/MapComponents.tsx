@@ -92,6 +92,12 @@ function MapComponents({
   const [timer, setTimer] = useState(gameSettings.timed);
   const navigate = useNavigate();
 
+  // Add Leaflet map API to window for getting map states in tests
+  useEffect(() => {
+    window.viewMap = map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Monitor timer and handle timer reaches 0
   useEffect(() => {
     if (timer === 0) {

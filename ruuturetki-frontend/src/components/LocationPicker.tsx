@@ -24,6 +24,11 @@ function LocationPicker({
     setMarker(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startPosition]);
+  // Add Leaflet map API to window for getting map states in tests
+  useEffect(() => {
+    window.selectionMap = map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Listen to selection map events (location guesses and hover)
   const map = useMapEvents({

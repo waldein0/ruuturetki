@@ -388,6 +388,10 @@ function DailyChallengeMarkers({
   delay?: number;
 }) {
   const map = useMap();
+  useEffect(() => {
+    window.curatorMap = map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   setTimeout(() => {
     map.fitBounds(L.latLngBounds(locations), { padding: [50, 50] });
   }, delay);

@@ -30,6 +30,12 @@ function PracticeComponents({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 
+  // Add Leaflet map API to window for getting map states in tests
+  useEffect(() => {
+    window.practiceMap = map;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div id="prac-controls">
