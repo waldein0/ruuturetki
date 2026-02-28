@@ -97,9 +97,6 @@ function Scoreboard({ totalScore }: { totalScore: number }) {
 
   return (
     <div className="fade-in scoreboard">
-      <h4>
-        <b>Scoreboard</b>
-      </h4>
       <DailyScoresTable dailyScores={scores} />
       {/* Show submit score form until it is sent */}
       {!isSent ? (
