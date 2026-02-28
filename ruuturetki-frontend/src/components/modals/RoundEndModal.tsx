@@ -8,27 +8,6 @@ import { useState } from "react";
 import GameSummary from "../GameSummary.tsx";
 import MapMarkers from "../MapMarkers.tsx";
 
-function ModalMap({ gameState }: { gameState: GameState }) {
-  const correctLocation: L.LatLng = gameState.locations[gameState.roundId];
-  const guessedLocation: L.LatLng | undefined =
-    gameState.guesses[gameState.roundId];
-  const resultMapOptions: L.MapOptions = {
-    center: correctLocation,
-    zoom: 13,
-    scrollWheelZoom: true,
-  };
-  // console.log('REM gameState:', gameState)
-  return (
-    <MapContainer id="results-map" {...resultMapOptions}>
-      <TileLayer {...tileLayerOptions()} />
-      <MapMarkers
-        locations={[correctLocation, guessedLocation]}
-        tooltipTexts={["The correct location", "Your guess"]}
-      />
-    </MapContainer>
-  );
-}
-
 function RoundEndModal({
   gameState,
   show,
@@ -43,6 +22,12 @@ function RoundEndModal({
   const roundNumber = gameState.roundId + 1;
   const roundScore = gameState.score[gameState.roundId];
   const totalScore = gameState.score.reduce((a, c) => a + c, 0);
+  const correctLocation = gameState.locations[gameState.roundId];
+  const resultMapOptions: L.MapOptions = {
+    center: correctLocation,
+    zoom: 13,
+  };
+  const guessedLocation = gameState.guesses[gameState.roundId];
   const modalTitle = summaryShown
     ? "Game Summary"
     : `Round ${roundNumber} out of 5 score`;
@@ -56,7 +41,7 @@ function RoundEndModal({
     }
   };
 
-  // Round summary is shown after all rounds
+  // Round summary element is show after every round
   const roundSummary = (
     <>
       <h2>{roundScore} points for the round!</h2>
@@ -69,7 +54,13 @@ function RoundEndModal({
           optimum={9000}
         />
       )}
-      <ModalMap gameState={gameState} />
+      <MapContainer id="results-map" {...resultMapOptions}>
+        <TileLayer {...tileLayerOptions()} />
+        <MapMarkers
+          locations={[correctLocation, guessedLocation]}
+          tooltipTexts={["The correct location", "Your guess"]}
+        />
+      </MapContainer>
       <h2 id="modal-score">
         {totalScore} / {roundNumber}0 000 total points
       </h2>
