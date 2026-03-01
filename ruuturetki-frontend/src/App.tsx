@@ -21,6 +21,7 @@ import Calendar from "./components/modals/Calendar";
 import { wmsOptionsForMapLayer } from "./utils/mapLayerHelpers";
 import calendarservice from "./services/dailyChallenge";
 import dayjs from "dayjs";
+import DailyChallengeModal from "./components/modals/DailyChallengeModal";
 
 function StartMenu({
   setGameSettings,
@@ -38,6 +39,7 @@ function StartMenu({
   const [showPlayModal, setPlayModal] = useState(false);
   const [showHelpModal, setHelpModal] = useState(false);
   const [showCalendarModal, setCalendarModal] = useState(false);
+  const [showDailyChallengeModal, setDailyChallengeModal] = useState(false);
   const [dailyChallenges, setDailyChallenges] = useState<DailyChallenge[]>([]);
   const navigate = useNavigate();
 
@@ -102,22 +104,8 @@ function StartMenu({
   const handleCloseCalendar = () => setCalendarModal(false);
   const handleShowCalendar = () => setCalendarModal(true);
 
-  const handleDailyClick = () => {
-    // Daily button should only be visible when there is a daily challenge for today
-    // Double check
-    if (!challenge) {
-      alert("Cannot find daily challenge for today!");
-      return; // Exit without starting game
-    }
-
-    // Prepare gamesettings for the challenge and start game
-    setGameSettings({
-      ortolayer: challenge.maplayer,
-      dragging: challenge.moving,
-      timed: challenge.timed,
-    });
-    navigate("/game");
-  };
+  const handleCloseDailyChallenge = () => setDailyChallengeModal(false);
+  const handleShowDailyChallenge = () => setDailyChallengeModal(true);
 
   // Settings for the background map in the main menu
   const ortoLayer: MapLayerName = "avoindata:Ortoilmakuva_2024_5cm";
@@ -141,6 +129,16 @@ function StartMenu({
         gameSettings={gameSettings}
         setChallenge={setChallenge}
       />
+
+      {showDailyChallengeModal && challenge && (
+        <DailyChallengeModal
+          show={showDailyChallengeModal}
+          handleCloseDailyChallenge={handleCloseDailyChallenge}
+          challenge={challenge}
+          setGameSettings={setGameSettings}
+        />
+      )}
+
       {showHelpModal && (
         <HelpModal show={showHelpModal} handleCloseHelp={handleCloseHelp} />
       )}
@@ -165,7 +163,11 @@ function StartMenu({
           play
         </Button>
         {challenge && (
-          <Button variant="dark" size="lg" onClick={() => handleDailyClick()}>
+          <Button
+            variant="dark"
+            size="lg"
+            onClick={() => handleShowDailyChallenge()}
+          >
             daily challenge
           </Button>
         )}

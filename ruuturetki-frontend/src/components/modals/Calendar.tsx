@@ -14,12 +14,12 @@ import MapMarkers from "../MapMarkers";
 import { useNavigate } from "react-router-dom";
 import {
   cityForMapLayer,
-  decadeForMapLayer,
   getCityCenter,
   tileLayerOptions,
 } from "../../utils/mapLayerHelpers";
 import DailyScoresTable from "../DailyScoresTable";
 import fetchDailyScores from "../../utils/fetchDailyScores";
+import DailyChallengeInfoTable from "../DailyChallengeInfoTable";
 
 // Set monday as the first day of the week
 dayjs.extend(updateLocale);
@@ -418,10 +418,6 @@ function DailyChallengeContent({
   const beforeToday = selectedDate.isBefore(today, "day");
   const afterToday = !beforeToday;
   const isToday = today.isSame(selectedDate, "day");
-  const city = cityForMapLayer(dailyChallenge.maplayer);
-  const decade = decadeForMapLayer(dailyChallenge.maplayer);
-  const moving = dailyChallenge.moving;
-  const timed = dailyChallenge.timed;
 
   return (
     <>
@@ -429,42 +425,7 @@ function DailyChallengeContent({
         Daily challenge for{" "}
         {isToday ? "today" : selectedDate.format("YYYY-MM-DD")}
       </h5>
-      <table>
-        <tbody>
-          <tr>
-            <td className="header">
-              <b>City:</b>
-            </td>
-            <td>
-              <i>{city}</i>
-            </td>
-          </tr>
-          <tr>
-            <td className="header">
-              <b>Decade:</b>
-            </td>
-            <td>
-              <i>{decade}</i>
-            </td>
-          </tr>
-          <tr>
-            <td className="header">
-              <b>Moving:</b>
-            </td>
-            <td>
-              <i>{moving ? "Allowed" : "Disabled"}</i>
-            </td>
-          </tr>
-          <tr>
-            <td className="header">
-              <b>Timer:</b>
-            </td>
-            <td>
-              <i>{timed ? "15 seconds per round" : "No"}</i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <DailyChallengeInfoTable challenge={dailyChallenge} />
       {/* Play button shown only for todays challenge */}
       {isToday && (
         <Button variant="secondary" onClick={handlePlay}>

@@ -196,6 +196,14 @@ div.play-modal-content {
 }
 /*  */
 
+/* Daily challenge modal */
+.daily-challenge-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+/*  */
+
 /* Help modal */
 div.help-content img {
   width: 100%;
